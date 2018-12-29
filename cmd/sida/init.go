@@ -58,8 +58,12 @@ func (i *initCmd) doRunInit(basepath string, force bool) error {
 		return err
 	}
 
-	if !s.Mode().IsDir() {
-		return Error("target path exists but isn't a directory")
+	if s != nil {
+		if !s.Mode().IsDir() {
+			return Error("target path exists but isn't a directory")
+		}
+
+		fmt.Printf("=- %v", s.Size())
 	}
 
 	for _, dir := range dirs {
