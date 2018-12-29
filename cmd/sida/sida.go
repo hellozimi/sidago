@@ -21,8 +21,9 @@ func main() {
 	cmd.SetOutput(os.Stdout)
 	newCmd := newNewCommand()
 	initCmd := newInitCommand()
+	generateCmd := newGenerateCommand()
 
-	cmd.AddCommand(newCmd, initCmd)
+	cmd.AddCommand(newCmd, initCmd, generateCmd)
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
