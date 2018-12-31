@@ -74,18 +74,13 @@
   version = "v1.1.2"
 
 [[projects]]
-  digest = "1:3e84f98834e567b36d9a2c50f6668f5e6be58cd30590f2098c626294f7c39f09"
+  digest = "1:4faf929acb279f445b18c6b8908762c1503b18939d97b838a221758c147d073c"
   name = "github.com/mmarkdown/mmark"
   packages = [
-    ".",
-    "internal/text",
     "mast",
     "mast/reference",
     "mparser",
-    "render/markdown",
     "render/mhtml",
-    "render/xml",
-    "render/xml2",
   ]
   pruneopts = "UT"
   revision = "d8d2394262665932720f93ef48066462dd0e3f36"
@@ -185,7 +180,13 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/mmarkdown/mmark",
+    "github.com/gomarkdown/markdown",
+    "github.com/gomarkdown/markdown/ast",
+    "github.com/gomarkdown/markdown/html",
+    "github.com/gomarkdown/markdown/parser",
+    "github.com/mmarkdown/mmark/mast",
+    "github.com/mmarkdown/mmark/mparser",
+    "github.com/mmarkdown/mmark/render/mhtml",
     "github.com/spf13/cobra",
     "github.com/spf13/viper",
   ]

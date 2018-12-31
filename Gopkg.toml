@@ -30,10 +30,6 @@
   unused-packages = true
 
 [[constraint]]
-  name = "github.com/namsral/flag"
-  version = "1.7.4-pre"
-
-[[constraint]]
   name = "github.com/spf13/cobra"
   version = "0.0.3"
 
