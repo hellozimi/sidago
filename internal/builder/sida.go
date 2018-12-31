@@ -1,20 +1,18 @@
 package builder
 
 import (
+	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/hellozimi/sidago/internal/config"
 )
 
 type Sida struct {
-	pages    []Page
+	pages    []*Page
 	config   config.Config
 	basePath string
-}
-
-func (s *Sida) Sitemap() {
-
 }
 
 func (s *Sida) generatePages() {
@@ -23,8 +21,9 @@ func (s *Sida) generatePages() {
 	pages := []*Page{}
 
 	for _, f := range assets {
-		pages = append(pages, newPage(f))
+		pages = append(pages, newPage(f, s))
 	}
+	s.pages = pages
 }
 
 func (s *Sida) scanDirPages(dir string) []string {
@@ -45,6 +44,14 @@ func (s *Sida) scanDirPages(dir string) []string {
 
 func (s *Sida) Build() {
 	s.generatePages()
+	for _, p := range s.pages {
+		fmt.Printf("Generating: %s\n", p.PageMeta.Slug)
+		op := p.OutputPath()
+		dir := filepath.Dir(op)
+		o := p.render()
+		os.MkdirAll(dir, 0777)
+		ioutil.WriteFile(op, []byte(o), 0777)
+	}
 }
 
 func NewSida(path string, config config.Config) *Sida {
