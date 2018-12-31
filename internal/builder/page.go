@@ -1,6 +1,10 @@
 package builder
 
 import (
+	"bytes"
+	"fmt"
+	"html/template"
+	"io/ioutil"
 	"path/filepath"
 	"regexp"
 
@@ -17,22 +21,60 @@ const (
 )
 
 type Page struct {
-	path    string
-	kind    PageKind
-	url     string
-	sida    Sida
-	content string
+	path       string
+	kind       PageKind
+	url        string
+	sida       Sida
+	rawContent []byte
+	content    []byte
+	PageMeta
 }
 
 func (p *Page) Kind() PageKind {
 	return p.kind
 }
 
-func (p *Page) init() {
-	mmark.Parse(p.path)
+func (p *Page) ContentString() template.HTML {
+	return template.HTML(string(p.content))
 }
 
-func newPage(path string) *Page {
+func (p *Page) init() {
+	var err error
+	p.rawContent, err = ioutil.ReadFile(p.path)
+	if err != nil {
+		fmt.Println("Error reading raw content")
+	}
+	p.content, err = mmark.Parse(p.path)
+	if err != nil {
+		fmt.Println("Error parsing content")
+	}
+
+	p.PageMeta = newPageMeta(p.path)
+}
+
+func (p *Page) render() string {
+	var tpl *template.Template
+	var err error
+	tpl, err = template.ParseFiles(
+		filepath.Join(p.sida.basePath, "layout/base.html"),
+		filepath.Join(p.sida.basePath, "layout/single.html"),
+		filepath.Join(p.sida.basePath, "layout/partials/header.html"),
+		filepath.Join(p.sida.basePath, "layout/partials/footer.html"),
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var tplb bytes.Buffer
+	if err := tpl.ExecuteTemplate(&tplb, "base.html", p); err != nil {
+		panic(fmt.Sprintf("Unable to render base.html - error: %v", err))
+	}
+
+	return tplb.String()
+}
+
+func newPage(path string, sida *Sida) *Page {
 	f := filepath.Base(path)
 	var kind PageKind
 	if bre.MatchString(f) {
@@ -42,6 +84,7 @@ func newPage(path string) *Page {
 	p := &Page{
 		path: path,
 		kind: kind,
+		sida: *sida,
 	}
 
 	p.init()

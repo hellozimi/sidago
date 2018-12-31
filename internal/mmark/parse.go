@@ -13,14 +13,14 @@ import (
 	"github.com/mmarkdown/mmark/render/mhtml"
 )
 
-func Parse(fileName string) {
+func Parse(fileName string) ([]byte, error) {
 	var (
 		d []byte
 	)
 	d, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		fmt.Printf("Couldn't open %q: %q", fileName, err)
-		return
+		return d, err
 	}
 
 	p := parser.NewWithExtensions(mparser.Extensions)
@@ -43,14 +43,12 @@ func Parse(fileName string) {
 	opts := html.RendererOptions{
 		Comments:       [][]byte{[]byte("//"), []byte("#")}, // used for callouts.
 		RenderNodeHook: mhtml.RenderHook,
-		Flags:          html.CommonFlags | html.FootnoteNoHRTag | html.FootnoteReturnLinks | html.CompletePage,
+		Flags:          html.CommonFlags | html.FootnoteNoHRTag | html.FootnoteReturnLinks,
 		Generator:      `  <meta name="GENERATOR" content="github.com/mmarkdown/mmark Mmark Markdown Processor - mmark.nl`,
 	}
 	opts.Title = documentTitle // hack to add-in discovered title
 
 	renderer := html.NewRenderer(opts)
 
-	x := markdown.Render(doc, renderer)
-
-	fmt.Printf("output: %v", x)
+	return markdown.Render(doc, renderer), nil
 }

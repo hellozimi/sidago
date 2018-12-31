@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -62,8 +63,6 @@ func (i *initCmd) doRunInit(basepath string, force bool) error {
 		if !s.Mode().IsDir() {
 			return Error("target path exists but isn't a directory")
 		}
-
-		fmt.Printf("=- %v", s.Size())
 	}
 
 	for _, dir := range dirs {
@@ -83,6 +82,9 @@ func (i *initCmd) doRunInit(basepath string, force bool) error {
 }
 
 func (i *initCmd) makeConfig(basepath string) error {
+	cfg := []byte(`
+title = "My new Sida"
+`)
 
-	return nil
+	return ioutil.WriteFile(filepath.Join(basepath, "config.toml"), cfg, 0777)
 }
