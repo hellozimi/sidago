@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/hellozimi/sidago/internal/builder"
-
-	"github.com/hellozimi/sidago/internal/config"
+	"github.com/hellozimi/sidago/internal/builder/config"
 
 	"github.com/hellozimi/sidago/sida"
 	"github.com/spf13/cobra"
@@ -50,7 +48,6 @@ func (g *generateCmd) runGenerate(c *cobra.Command, args []string) error {
 	}
 
 	s := builder.NewSida(p, cfg)
-	fmt.Printf("cfg: %s", cfg.GetString("title"))
 	s.Build()
 
 	return nil

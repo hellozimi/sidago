@@ -1,16 +1,30 @@
 package builder
 
 import (
+	"html/template"
 	"strings"
 	"time"
 
 	"github.com/hellozimi/sidago/helpers"
 )
 
+type PageNameComponents struct {
+	Title string
+	Year  string
+	Month string
+	Day   string
+}
+
 type PageMeta struct {
-	BaseFilename string
-	Slug         string
-	Date         time.Time
+	BaseFilename   string
+	Slug           string
+	Date           time.Time
+	NameComponents PageNameComponents
+	page           *Page
+}
+
+func (p *PageMeta) URL() template.URL {
+	return template.URL(p.page.sida.Global.baseURL + p.page.RelOutputPath())
 }
 
 func newPageMeta(path string) PageMeta {
@@ -20,6 +34,12 @@ func newPageMeta(path string) PageMeta {
 	return PageMeta{
 		Slug: slug,
 		Date: date,
+		NameComponents: PageNameComponents{
+			Title: helpers.Unslugify(slug),
+			Year:  string(date.Year()),
+			Month: string(date.Month()),
+			Day:   string(date.Day()),
+		},
 	}
 }
 
