@@ -6,24 +6,30 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/hellozimi/sidago/internal/config"
+	"github.com/hellozimi/sidago/fs"
+	"github.com/hellozimi/sidago/internal/builder/config"
 )
 
 type Sida struct {
-	pages    []*Page
+	allPages []*Page
 	config   config.Config
 	basePath string
+	Global   GlobalInfo
 }
 
 func (s *Sida) generatePages() {
 	assets := s.scanDirPages("pages")
 	assets = append(assets, s.scanDirPages("posts")...)
-	pages := []*Page{}
+	allPages := []*Page{}
 
 	for _, f := range assets {
-		pages = append(pages, newPage(f, s))
+		p := newPage(f, s)
+		allPages = append(allPages, p)
 	}
-	s.pages = pages
+
+	allPages = append(allPages, newIndex(s))
+
+	s.allPages = allPages
 }
 
 func (s *Sida) scanDirPages(dir string) []string {
@@ -42,15 +48,48 @@ func (s *Sida) scanDirPages(dir string) []string {
 	return out
 }
 
+func (s *Sida) Posts() []*Page {
+	posts := make([]*Page, 0)
+	for _, p := range s.allPages {
+		if p.Kind() == KindBlog {
+			posts = append(posts, p)
+		}
+	}
+	return posts
+}
+
+func (s *Sida) copyStatic() {
+
+}
+
 func (s *Sida) Build() {
 	s.generatePages()
-	for _, p := range s.pages {
-		fmt.Printf("Generating: %s\n", p.PageMeta.Slug)
+	for _, p := range s.allPages {
+		fmt.Printf("Generating: %s\n", p.PageMeta.NameComponents.Title)
 		op := p.OutputPath()
 		dir := filepath.Dir(op)
 		o := p.render()
 		os.MkdirAll(dir, 0777)
 		ioutil.WriteFile(op, []byte(o), 0777)
+	}
+
+	os.RemoveAll(filepath.Join(s.basePath, "build/static"))
+	fmt.Println("Copying static assets")
+	err := fs.CopyDir(
+		filepath.Join(s.basePath, "layout/static"),
+		filepath.Join(s.basePath, "build/static"),
+	)
+	if err != nil {
+		fmt.Printf("Error copying static assets: %v", err)
+	}
+}
+
+func (s *Sida) buildInfo() {
+	s.Global = GlobalInfo{
+		Title:     s.config.GetString("title"),
+		baseURL:   s.config.GetString("base_url"),
+		Copyright: s.config.GetString("copyright"),
+		sida:      s,
 	}
 }
 
@@ -59,6 +98,8 @@ func NewSida(path string, config config.Config) *Sida {
 		config:   config,
 		basePath: path,
 	}
+
+	s.buildInfo()
 
 	return &s
 }
