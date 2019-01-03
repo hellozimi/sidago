@@ -31,7 +31,12 @@ func newGenerateCommand() *cobra.Command {
 }
 
 func (g *generateCmd) runGenerate(c *cobra.Command, args []string) error {
-	path := args[0]
+
+	var path string
+	if len(args) != 0 {
+		path = args[0]
+	}
+
 	p, err := filepath.Abs(filepath.Clean(path))
 	if err != nil {
 		return err
