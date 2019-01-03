@@ -5,11 +5,13 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/hellozimi/sidago/fs"
 	"github.com/hellozimi/sidago/internal/builder/config"
 )
 
+// Sida main struct
 type Sida struct {
 	allPages []*Page
 	config   config.Config
@@ -48,6 +50,7 @@ func (s *Sida) scanDirPages(dir string) []string {
 	return out
 }
 
+// Posts returns all blog posts sorted by date desc
 func (s *Sida) Posts() []*Page {
 	posts := make([]*Page, 0)
 	for _, p := range s.allPages {
@@ -65,6 +68,9 @@ func (s *Sida) copyStatic() {
 
 }
 
+// Build starts the build procedure and generates
+// all the html files and copies static content to
+// the build directory
 func (s *Sida) Build() {
 	s.generatePages()
 	for _, p := range s.allPages {
@@ -96,6 +102,8 @@ func (s *Sida) buildInfo() {
 	}
 }
 
+// NewSida creates the main building block to generate
+// a static site
 func NewSida(path string, config config.Config) *Sida {
 	s := Sida{
 		config:   config,
