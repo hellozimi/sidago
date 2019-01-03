@@ -53,7 +53,5 @@ func (g *generateCmd) runGenerate(c *cobra.Command, args []string) error {
 	}
 
 	s := builder.NewSida(p, cfg)
-	s.Build()
-
-	return nil
+	return s.Build()
 }
