@@ -54,7 +54,7 @@ func (s *Sida) scanDirPages(dir string) []string {
 func (s *Sida) Posts() []*Page {
 	posts := make([]*Page, 0)
 	for _, p := range s.allPages {
-		if p.Kind() == kindBlog {
+		if p.Kind() == kindBlog && !p.Draft {
 			posts = append(posts, p)
 		}
 	}
@@ -62,10 +62,6 @@ func (s *Sida) Posts() []*Page {
 		return posts[i].Date.After(posts[j].Date)
 	})
 	return posts
-}
-
-func (s *Sida) copyStatic() {
-
 }
 
 // Build starts the build procedure and generates
