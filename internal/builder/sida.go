@@ -55,6 +55,9 @@ func (s *Sida) Posts() []*Page {
 			posts = append(posts, p)
 		}
 	}
+	sort.Slice(posts[:], func(i, j int) bool {
+		return posts[i].PageMeta.Date.After(posts[j].PageMeta.Date)
+	})
 	return posts
 }
 
