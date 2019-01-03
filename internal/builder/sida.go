@@ -71,7 +71,7 @@ func (s *Sida) copyStatic() {
 // Build starts the build procedure and generates
 // all the html files and copies static content to
 // the build directory
-func (s *Sida) Build() {
+func (s *Sida) Build() error {
 	s.generatePages()
 	for _, p := range s.allPages {
 		fmt.Printf("Generating: %s\n", p.PageMeta.NameComponents.Title)
@@ -79,7 +79,10 @@ func (s *Sida) Build() {
 		dir := filepath.Dir(op)
 		o := p.render()
 		os.MkdirAll(dir, 0777)
-		ioutil.WriteFile(op, []byte(o), 0777)
+		err := ioutil.WriteFile(op, []byte(o), 0777)
+		if err != nil {
+			return err
+		}
 	}
 
 	os.RemoveAll(filepath.Join(s.basePath, "build/static"))
@@ -89,8 +92,10 @@ func (s *Sida) Build() {
 		filepath.Join(s.basePath, "build/static"),
 	)
 	if err != nil {
-		fmt.Printf("Error copying static assets: %v", err)
+		return fmt.Errorf("error copying static assets: %v", err)
 	}
+
+	return nil
 }
 
 func (s *Sida) buildInfo() {
