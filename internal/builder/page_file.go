@@ -26,11 +26,11 @@ func (p *Page) RelOutputPath() string {
 
 func (p *Page) directoryForKind() string {
 	switch p.kind {
-	case KindBlog:
+	case kindBlog:
 		return postsDirectory
-	case KindPage:
+	case kindPage:
 		return pagesDirectory
-	case KindIndex:
+	case kindIndex:
 		return indexDiretory
 	}
 	return ""

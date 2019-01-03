@@ -17,9 +17,9 @@ type PageKind int
 var bre = regexp.MustCompile("^(19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)_([-_]*[a-zA-Z0-9]+([-_]*[a-zA-Z0-9]+)*)\\.md$")
 
 const (
-	KindIndex PageKind = 0
-	KindPage  PageKind = 1
-	KindBlog  PageKind = 2
+	kindIndex PageKind = 0
+	kindPage  PageKind = 1
+	kindBlog  PageKind = 2
 )
 
 type Page struct {
@@ -55,7 +55,7 @@ func (p *Page) init() {
 
 	// Skips content initialization for index
 	// because index is a dummy file
-	if p.Kind() != KindIndex {
+	if p.Kind() != kindIndex {
 		p.initContent()
 	}
 }
@@ -82,13 +82,13 @@ func (p *Page) render() string {
 	var layout string
 
 	switch p.Kind() {
-	case KindBlog:
+	case kindBlog:
 		layout = "single"
 		break
-	case KindPage:
+	case kindPage:
 		layout = "page"
 		break
-	case KindIndex:
+	case kindIndex:
 		layout = "index"
 		break
 	}
@@ -117,9 +117,9 @@ func newPage(path string, sida *Sida) *Page {
 	f := filepath.Base(path)
 	var kind PageKind
 	if bre.MatchString(f) {
-		kind = KindBlog
+		kind = kindBlog
 	} else {
-		kind = KindPage
+		kind = kindPage
 	}
 
 	p := &Page{
@@ -135,7 +135,7 @@ func newPage(path string, sida *Sida) *Page {
 }
 
 func newIndex(sida *Sida) *Page {
-	kind := KindIndex
+	kind := kindIndex
 
 	p := &Page{
 		path: "index",

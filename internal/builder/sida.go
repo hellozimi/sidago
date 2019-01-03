@@ -54,7 +54,7 @@ func (s *Sida) scanDirPages(dir string) []string {
 func (s *Sida) Posts() []*Page {
 	posts := make([]*Page, 0)
 	for _, p := range s.allPages {
-		if p.Kind() == KindBlog {
+		if p.Kind() == kindBlog {
 			posts = append(posts, p)
 		}
 	}
