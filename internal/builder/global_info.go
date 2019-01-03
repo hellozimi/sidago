@@ -8,11 +8,12 @@ import (
 
 // GlobalInfo struct for site rendering
 type GlobalInfo struct {
-	Title     string
-	baseURL   string
-	Copyright string
-	Data      *map[string]interface{}
-	sida      *Sida
+	Title       string
+	Description string
+	Copyright   string
+	Data        *map[string]interface{}
+	baseURL     string
+	sida        *Sida
 }
 
 // Config returns the shared config

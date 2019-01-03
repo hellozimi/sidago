@@ -106,10 +106,11 @@ func (s *Sida) Build() error {
 
 func (s *Sida) buildInfo() {
 	s.Global = GlobalInfo{
-		Title:     s.config.GetString("title"),
-		baseURL:   s.config.GetString("base_url"),
-		Copyright: s.config.GetString("copyright"),
-		sida:      s,
+		Title:       s.config.GetString("title"),
+		Description: s.config.GetString("description"),
+		Copyright:   s.config.GetString("copyright"),
+		baseURL:     s.config.GetString("base_url"),
+		sida:        s,
 	}
 }
 
