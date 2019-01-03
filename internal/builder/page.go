@@ -7,6 +7,9 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"regexp"
+	"time"
+
+	"github.com/hellozimi/sidago/internal/parser"
 
 	"github.com/hellozimi/sidago/helpers"
 	"github.com/hellozimi/sidago/internal/mmark"
@@ -33,6 +36,9 @@ type Page struct {
 	rawContent []byte
 	content    []byte
 	summary    string
+	Title      string
+	Date       time.Time
+	Draft      bool
 	PageMeta
 }
 
@@ -51,12 +57,21 @@ func (p *Page) Summary() template.HTML {
 	return template.HTML(p.summary)
 }
 
-func (p *Page) init() {
+// Slug returns the slug of the title
+func (p *Page) Slug() string {
+	return helpers.Slugify(p.Title)
+}
 
+func (p *Page) init() {
 	pageMeta := newPageMeta(p.path)
 	pageMeta.page = p
 
 	p.PageMeta = pageMeta
+
+	filename, _ := helpers.FileAndExt(p.path)
+	slug, date := slugAndDateFromFile(filename)
+	p.Date = date
+	p.Title = helpers.Unslugify(slug)
 
 	// Skips content initialization for index
 	// because index is a dummy file
@@ -69,10 +84,26 @@ func (p *Page) initContent() {
 	var err error
 	p.rawContent, err = ioutil.ReadFile(p.path)
 	if err != nil {
-		fmt.Println("Error reading raw content")
+		fmt.Println("error reading raw content")
 		return
 	}
-	p.content, err = mmark.Parse(p.path)
+
+	var body []byte
+
+	if parser.HasFrontmatter(p.rawContent) {
+		f, b, err := parser.ParseFrontmatterBody(p.rawContent)
+		if err != nil {
+			fmt.Printf("error parsing frontmatter on %s:\n\t%v", p.path, err)
+			return
+		}
+		body = b
+
+		p.updateWithFrontmatter(f)
+	} else {
+		body = p.rawContent
+	}
+
+	p.content, err = mmark.ParseBytes(body)
 	if err != nil {
 		fmt.Println("Error parsing content")
 		return

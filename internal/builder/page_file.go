@@ -22,7 +22,7 @@ func (p *Page) OutputPath() string {
 func (p *Page) RelOutputPath() string {
 	return filepath.Join(
 		p.directoryForKind(),
-		p.PageMeta.Slug+".html",
+		p.Slug()+".html",
 	)
 }
 

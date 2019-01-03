@@ -8,9 +8,8 @@ import (
 	"github.com/hellozimi/sidago/helpers"
 )
 
-// PageNameComponents struct
-type PageNameComponents struct {
-	Title string
+// DateComps struct
+type DateComps struct {
 	Year  string
 	Month string
 	Day   string
@@ -19,9 +18,7 @@ type PageNameComponents struct {
 // PageMeta struct
 type PageMeta struct {
 	BaseFilename   string
-	Slug           string
-	Date           time.Time
-	NameComponents PageNameComponents
+	DateComponents DateComps
 	page           *Page
 }
 
@@ -32,13 +29,10 @@ func (p *PageMeta) URL() template.URL {
 
 func newPageMeta(path string) PageMeta {
 	filename, _ := helpers.FileAndExt(path)
-	slug, date := slugAndDateFromFile(filename)
+	_, date := slugAndDateFromFile(filename)
 
 	return PageMeta{
-		Slug: slug,
-		Date: date,
-		NameComponents: PageNameComponents{
-			Title: helpers.Unslugify(slug),
+		DateComponents: DateComps{
 			Year:  string(date.Year()),
 			Month: string(date.Month()),
 			Day:   string(date.Day()),
