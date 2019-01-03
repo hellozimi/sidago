@@ -7,12 +7,15 @@ import (
 
 var suffixRe = regexp.MustCompile("(\\.|\\?|\\.\"|!)$")
 
+// TruncateFull truncates text to a minmum amount of words
+// and tries to find next period after that min word count
+// which always results in a full sentence.
 func TruncateFull(in string, min int) string {
-	if len(in) < min {
+	words := strings.Fields(in)
+
+	if len(words) < min {
 		return in
 	}
-
-	words := strings.Fields(in)
 
 	for i, w := range words {
 		if suffixRe.Match([]byte(w)) && i >= min {

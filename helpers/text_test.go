@@ -8,6 +8,7 @@ func TestTruncateFull(t *testing.T) {
 		b int
 		e string
 	}{
+		{a: "This.", b: 2, e: "This."},
 		{a: "This is a sentence.", b: 0, e: "This is a sentence."},
 		{a: "This is a paragraph. The paragraph has two sentences.", b: 0, e: "This is a paragraph."},
 		{a: "This is a paragraph! The paragraph has two sentences.", b: 0, e: "This is a paragraph!"},
