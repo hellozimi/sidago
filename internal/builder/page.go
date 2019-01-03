@@ -12,6 +12,7 @@ import (
 	"github.com/hellozimi/sidago/internal/mmark"
 )
 
+// PageKind type
 type PageKind int
 
 var bre = regexp.MustCompile("^(19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)_([-_]*[a-zA-Z0-9]+([-_]*[a-zA-Z0-9]+)*)\\.md$")
@@ -22,6 +23,7 @@ const (
 	kindBlog  PageKind = 2
 )
 
+// Page struct
 type Page struct {
 	path       string
 	kind       PageKind
@@ -34,14 +36,17 @@ type Page struct {
 	PageMeta
 }
 
+// Kind returns the page kind
 func (p *Page) Kind() PageKind {
 	return p.kind
 }
 
+// Content for template rendering
 func (p *Page) Content() template.HTML {
 	return template.HTML(string(p.content))
 }
 
+// Summary for template rendering
 func (p *Page) Summary() template.HTML {
 	return template.HTML(p.summary)
 }

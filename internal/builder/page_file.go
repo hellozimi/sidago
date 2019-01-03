@@ -9,6 +9,7 @@ const (
 	pagesDirectory = ""
 )
 
+// OutputPath is an absolute path for a Page destination
 func (p *Page) OutputPath() string {
 	return filepath.Join(
 		p.sida.basePath,
@@ -17,6 +18,7 @@ func (p *Page) OutputPath() string {
 	)
 }
 
+// RelOutputPath is a Page destination relative to work dir
 func (p *Page) RelOutputPath() string {
 	return filepath.Join(
 		p.directoryForKind(),

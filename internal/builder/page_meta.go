@@ -8,6 +8,7 @@ import (
 	"github.com/hellozimi/sidago/helpers"
 )
 
+// PageNameComponents struct
 type PageNameComponents struct {
 	Title string
 	Year  string
@@ -15,6 +16,7 @@ type PageNameComponents struct {
 	Day   string
 }
 
+// PageMeta struct
 type PageMeta struct {
 	BaseFilename   string
 	Slug           string
@@ -23,6 +25,7 @@ type PageMeta struct {
 	page           *Page
 }
 
+// URL returns the permalink for a page
 func (p *PageMeta) URL() template.URL {
 	return template.URL(p.page.sida.Global.baseURL + p.page.RelOutputPath())
 }

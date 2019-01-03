@@ -32,7 +32,7 @@ The new site will be generated with the correct content to begin writing.`,
 
 func (i *initCmd) runInit(c *cobra.Command, args []string) error {
 	if len(args) < 1 {
-		return Error("needs to provide a path")
+		return fmt.Errorf("needs to provide a path")
 	}
 
 	p, err := filepath.Abs(filepath.Clean(args[0]))
@@ -61,7 +61,7 @@ func (i *initCmd) doRunInit(basepath string, force bool) error {
 
 	if s != nil {
 		if !s.Mode().IsDir() {
-			return Error("target path exists but isn't a directory")
+			return fmt.Errorf("target path exists but isn't a directory")
 		}
 	}
 
