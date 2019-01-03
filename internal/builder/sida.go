@@ -73,8 +73,10 @@ func (s *Sida) copyStatic() {
 // the build directory
 func (s *Sida) Build() error {
 	s.generatePages()
-	for _, p := range s.allPages {
-		fmt.Printf("Generating: %s\n", p.PageMeta.NameComponents.Title)
+
+	c := len(s.allPages)
+	for i, p := range s.allPages {
+		fmt.Printf("\r🔨 Generating page %d/%d", i+1, c)
 		op := p.OutputPath()
 		dir := filepath.Dir(op)
 		o := p.render()
@@ -85,8 +87,10 @@ func (s *Sida) Build() error {
 		}
 	}
 
+	fmt.Println()
+
 	os.RemoveAll(filepath.Join(s.basePath, "build/static"))
-	fmt.Println("Copying static assets")
+	fmt.Println("📁 Copying static assets")
 	err := fs.CopyDir(
 		filepath.Join(s.basePath, "layout/static"),
 		filepath.Join(s.basePath, "build/static"),
@@ -94,6 +98,8 @@ func (s *Sida) Build() error {
 	if err != nil {
 		return fmt.Errorf("error copying static assets: %v", err)
 	}
+
+	fmt.Printf("\n🚀 Build completed...\n\n")
 
 	return nil
 }
