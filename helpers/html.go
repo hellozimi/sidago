@@ -6,6 +6,7 @@ import (
 
 var p = bluemonday.StrictPolicy()
 
+// StripHTML removes all html tags.
 func StripHTML(html string) string {
 	return p.Sanitize(html)
 }
