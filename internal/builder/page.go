@@ -38,7 +38,7 @@ func (p *Page) Kind() PageKind {
 	return p.kind
 }
 
-func (p *Page) ContentString() template.HTML {
+func (p *Page) Content() template.HTML {
 	return template.HTML(string(p.content))
 }
 
@@ -69,8 +69,8 @@ func (p *Page) initContent() {
 	}
 	p.content, err = mmark.Parse(p.path)
 	if err != nil {
-		return
 		fmt.Println("Error parsing content")
+		return
 	}
 
 	p.summary = summaryFromContent(string(p.content))
