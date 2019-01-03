@@ -98,13 +98,12 @@ func (p *Page) render() string {
 		break
 	}
 
-	tpl, err = template.ParseFiles(
+	tpl = template.Must(template.New("").Funcs(template.FuncMap{}).ParseFiles(
 		filepath.Join(p.sida.basePath, "layout/base.html"),
 		filepath.Join(p.sida.basePath, fmt.Sprintf("layout/%s.html", layout)),
 		filepath.Join(p.sida.basePath, "layout/partials/header.html"),
 		filepath.Join(p.sida.basePath, "layout/partials/footer.html"),
-	)
-	tpl = tpl.Funcs(template.FuncMap{})
+	))
 
 	if err != nil {
 		panic(err)
