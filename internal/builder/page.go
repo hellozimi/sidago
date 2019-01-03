@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"regexp"
 
+	"github.com/hellozimi/sidago/helpers"
 	"github.com/hellozimi/sidago/internal/mmark"
 )
 
@@ -29,6 +30,7 @@ type Page struct {
 	Global     *GlobalInfo
 	rawContent []byte
 	content    []byte
+	summary    string
 	PageMeta
 }
 
@@ -38,6 +40,10 @@ func (p *Page) Kind() PageKind {
 
 func (p *Page) ContentString() template.HTML {
 	return template.HTML(string(p.content))
+}
+
+func (p *Page) Summary() template.HTML {
+	return template.HTML(p.summary)
 }
 
 func (p *Page) init() {
@@ -66,6 +72,8 @@ func (p *Page) initContent() {
 		return
 		fmt.Println("Error parsing content")
 	}
+
+	p.summary = summaryFromContent(string(p.content))
 }
 
 func (p *Page) render() string {
@@ -139,4 +147,9 @@ func newIndex(sida *Sida) *Page {
 	p.init()
 
 	return p
+}
+
+func summaryFromContent(h string) string {
+	stripped := helpers.StripHTML(h)
+	return helpers.TruncateFull(stripped, 20)
 }
