@@ -6,7 +6,7 @@ const (
 	buildDirectory = "build"
 	indexDiretory  = ""
 	postsDirectory = "posts"
-	pagesDirectory = "pages"
+	pagesDirectory = ""
 )
 
 func (p *Page) OutputPath() string {
