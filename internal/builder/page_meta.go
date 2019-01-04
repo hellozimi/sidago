@@ -2,8 +2,6 @@ package builder
 
 import (
 	"html/template"
-	"strings"
-	"time"
 
 	"github.com/hellozimi/sidago/helpers"
 )
@@ -29,7 +27,7 @@ func (p *PageMeta) URL() template.URL {
 
 func newPageMeta(path string) PageMeta {
 	filename, _ := helpers.FileAndExt(path)
-	_, date := slugAndDateFromFile(filename)
+	_, date := helpers.SlugAndDateFromFile(filename)
 
 	return PageMeta{
 		DateComponents: DateComps{
@@ -38,19 +36,4 @@ func newPageMeta(path string) PageMeta {
 			Day:   string(date.Day()),
 		},
 	}
-}
-
-func slugAndDateFromFile(filename string) (string, time.Time) {
-	if len(filename) < 10 {
-		return filename, time.Time{}
-	}
-
-	d, err := time.Parse("2006-01-02", filename[:10])
-	if err != nil {
-		return filename, time.Time{}
-	}
-
-	slug := strings.Trim(filename[10:], " -_")
-
-	return slug, d
 }

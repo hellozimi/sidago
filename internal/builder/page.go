@@ -69,7 +69,7 @@ func (p *Page) init() {
 	p.PageMeta = pageMeta
 
 	filename, _ := helpers.FileAndExt(p.path)
-	slug, date := slugAndDateFromFile(filename)
+	slug, date := helpers.SlugAndDateFromFile(filename)
 	p.Date = date
 	p.Title = helpers.Unslugify(slug)
 
