@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/hellozimi/sidago/internal/builder"
@@ -11,12 +12,18 @@ import (
 )
 
 type generateCmd struct {
-	path string
-	cmd  *cobra.Command
+	buildDir string
+	cmd      *cobra.Command
+	rootCmd  *cobra.Command
+	command
 }
 
-func newGenerateCommand() *cobra.Command {
-	c := &generateCmd{}
+func (g *generateCmd) Command() *cobra.Command {
+	return g.cmd
+}
+
+func newGenerateCommand(rootCmd *cobra.Command) command {
+	c := &generateCmd{rootCmd: rootCmd}
 	cmd := &cobra.Command{
 		Use:   "generate [OPTIONS]",
 		Short: "Generates html files from markdown",
@@ -25,17 +32,16 @@ func newGenerateCommand() *cobra.Command {
 
 	c.cmd = cmd
 
-	cmd.Flags().StringVarP(&c.path, "path", "p", "./build", "pass to generate the content in any other path than ./build")
+	cmd.Flags().StringVarP(&c.buildDir, "build", "b", "./build", "pass to generate the content in any other path than ./build - relative to project cwd")
 
-	return cmd
+	return c
 }
 
 func (g *generateCmd) runGenerate(c *cobra.Command, args []string) error {
 
-	var path string
-	if len(args) != 0 {
-		path = args[0]
-	}
+	fmt.Printf("build dir: %v\n\n\n", g.buildDir)
+
+	path := g.rootCmd.PersistentFlags().Lookup("path").Value.String()
 
 	p, err := filepath.Abs(filepath.Clean(path))
 	if err != nil {

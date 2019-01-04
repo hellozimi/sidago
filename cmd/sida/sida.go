@@ -7,23 +7,31 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newCommand() *cobra.Command {
+type rootOptions struct {
+	path string
+}
+
+var opts = rootOptions{}
+
+func newRootCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sida [OPTIONS]",
 		Short: "A static site generator",
 	}
 
+	cmd.PersistentFlags().StringVarP(&opts.path, "path", "p", "./", "base path for your sida location")
+
 	return cmd
 }
 
 func main() {
-	cmd := newCommand()
+	cmd := newRootCommand()
 	cmd.SetOutput(os.Stdout)
-	newCmd := newNewCommand()
-	initCmd := newInitCommand()
-	generateCmd := newGenerateCommand()
+	newCmd := newNewCommand(cmd)
+	initCmd := newInitCommand(cmd)
+	generateCmd := newGenerateCommand(cmd)
 
-	cmd.AddCommand(newCmd, initCmd, generateCmd)
+	cmd.AddCommand(newCmd.Command(), initCmd.Command(), generateCmd.Command())
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)

@@ -7,21 +7,30 @@ import (
 )
 
 type newCmd struct {
+	cmd     *cobra.Command
+	rootCmd *cobra.Command
+	command
 	newType string
 }
 
-func newNewCommand() *cobra.Command {
+func (n *newCmd) Command() *cobra.Command {
+	return n.cmd
+}
+
+func newNewCommand(rootCmd *cobra.Command) command {
+	n := &newCmd{rootCmd: rootCmd}
 	cmd := &cobra.Command{
 		Use:   "new [OPTIONS]",
 		Short: "Creates a new post or page",
 	}
 
-	cmd.RunE = runNew
+	n.cmd = cmd
+	cmd.RunE = n.runNew
 
-	return cmd
+	return n
 }
 
-func runNew(c *cobra.Command, args []string) error {
-	fmt.Printf("%v\n", args)
+func (n *newCmd) runNew(c *cobra.Command, args []string) error {
+	fmt.Printf("%v: %v\n", args, c.Parent().PersistentFlags().Lookup("path").Value)
 	return nil
 }

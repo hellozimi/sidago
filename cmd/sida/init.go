@@ -10,11 +10,17 @@ import (
 )
 
 type initCmd struct {
-	cmd *cobra.Command
+	cmd     *cobra.Command
+	rootCmd *cobra.Command
+	command
 }
 
-func newInitCommand() *cobra.Command {
-	c := &initCmd{}
+func (i *initCmd) Command() *cobra.Command {
+	return i.cmd
+}
+
+func newInitCommand(rootCmd *cobra.Command) command {
+	c := &initCmd{rootCmd: rootCmd}
 	cmd := &cobra.Command{
 		Use:   "init [PATH]",
 		Short: "Creates a new sida",
@@ -27,7 +33,7 @@ The new site will be generated with the correct content to begin writing.`,
 
 	cmd.Flags().Bool("force", false, "forces initialization in a non-empty directory")
 
-	return cmd
+	return c
 }
 
 func (i *initCmd) runInit(c *cobra.Command, args []string) error {
