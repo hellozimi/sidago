@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/hellozimi/sidago/internal/content"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +11,7 @@ type newCmd struct {
 	cmd     *cobra.Command
 	rootCmd *cobra.Command
 	command
+	force   bool
 	newType string
 }
 
@@ -33,6 +35,8 @@ func newNewCommand(rootCmd *cobra.Command) command {
 		},
 	}
 
+	cmd.Flags().BoolVarP(&n.force, "force", "f", false, "forces creation and overwrites existing file")
+
 	n.cmd = cmd
 	cmd.RunE = n.runNew
 
@@ -41,11 +45,10 @@ func newNewCommand(rootCmd *cobra.Command) command {
 
 func (n *newCmd) runNew(c *cobra.Command, args []string) error {
 	path := n.rootCmd.PersistentFlags().Lookup("path").Value.String()
-	fmt.Printf("%v: %v\n", args, path)
+	f := n.force
 	pageType := args[0]
 	pageName := args[1]
+	cc := content.New(path, pageType, pageName)
 
-	fmt.Printf("%s %s", pageType, pageName)
-
-	return nil
+	return cc.Execute(f)
 }
