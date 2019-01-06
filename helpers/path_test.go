@@ -34,6 +34,7 @@ func TestSlugAndDate(t *testing.T) {
 	}{
 		{a: "2018-12-24_my-slug", d: timeF(t, "2018-12-24"), s: "my-slug"},
 		{a: "my-slug-other-slug", d: time.Time{}, s: "my-slug-other-slug"},
+		{a: "test", d: time.Time{}, s: "test"},
 	}
 
 	for _, x := range cases {
