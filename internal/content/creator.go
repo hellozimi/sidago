@@ -2,6 +2,8 @@ package content
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -10,7 +12,10 @@ import (
 
 type contentType string
 
-var ErrContentTypeNotSupported = fmt.Errorf("the content type is not supported")
+var (
+	ErrFileExists              = fmt.Errorf("file already exists at destination")
+	ErrContentTypeNotSupported = fmt.Errorf("the content type is not supported")
+)
 
 const (
 	typeUnknown contentType = "unknown"
@@ -25,10 +30,28 @@ type ContentCreator struct {
 	t    contentType
 }
 
+// Execute writes boilerplate to output dir
 func (c *ContentCreator) Execute(force bool) error {
 	if c.t == typeUnknown {
 		return ErrContentTypeNotSupported
 	}
+
+	path := c.outputFilePath()
+	if _, err := os.Stat(path); !os.IsNotExist(err) && !force {
+		return ErrFileExists
+	}
+
+	content, err := c.b.content()
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(path, []byte(content), 0777)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
