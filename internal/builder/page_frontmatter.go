@@ -3,8 +3,8 @@ package builder
 import (
 	"fmt"
 	"path/filepath"
-	"strings"
-	"time"
+
+	"github.com/hellozimi/sidago/helpers"
 )
 
 func (p *Page) updateWithFrontmatter(f map[string]interface{}) {
@@ -15,10 +15,7 @@ func (p *Page) updateWithFrontmatter(f map[string]interface{}) {
 	}
 	if x, ok := f["date"]; ok {
 		if val, ok := x.(string); ok && len(val) > 0 {
-			if !strings.HasSuffix(val, "Z") {
-				val = val + "Z"
-			}
-			date, err := time.Parse(time.RFC3339, val)
+			date, err := helpers.ParseDate(val)
 			if err != nil {
 				fname := filepath.Base(p.path)
 				fmt.Printf("error parsing frontmatter date for %s\n\n", fname)
