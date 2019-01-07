@@ -1,23 +1,36 @@
-GOCMD = go
-GOBUILD = $(GOCMD) build
-GOCLEAN = $(GOCMD) clean
-GOTEST = $(GOCMD) test
-DEP = dep
-GIT = git
+DEP=dep
+GIT=git
 
-BINARY = "bin/sida"
-VERSION = `$(GIT) describe --tags`
-TIME = `date +%FT%T%z`
+PROJECTNAME=$(shell basename "$(PWD)")
+BINARY=bin/sida
+VERSION=`$(GIT) describe --tags`
+TIME=`date +%FT%T%z`
 
-all: test build
+MAKEFLAGS += --silent
+LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${TIME}"
+
+.PHONY: help
+all: help
+help: Makefile
+	@echo " Choose a command to run in "$(PROJECTNAME)":"
+	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
+
+## clean: Cleans the project and build directory
 clean:
-	$(GOCLEAN)
-	rm -f $(BINARY)
+	@go clean
+	@rm -f $(BINARY)
+## build: Builds a binary
 build:
-	$(GOBUILD) -o $(BINARY) -ldflags "-X main.Version=${VERSION} -X main.Build=${TIME}" -v cmd/sida/*.go
+	@go build -o $(BINARY) $(LDFLAGS) -v cmd/sida/*.go
+## test: Run all tests
 test:
-	$(GOTEST) ./...
+	@go test ./...
+## cover: Run all tests and report coverage
 cover:
-	$(GOTEST) --cover ./...
+	@go test --cover ./...
+## deps: Installs dependencies
 deps:
-	$(DEP) ensure
+	@dep ensure
+## install: Installs the binary
+install: 
+	@go build -i -o $(BINARY) $(LDFLAGS) -v cmd/sida/*.go
