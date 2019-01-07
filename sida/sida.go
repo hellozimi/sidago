@@ -1,6 +1,7 @@
 package sida
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -8,7 +9,7 @@ import (
 )
 
 // IsSida checks if diretory is a valid sida
-func IsSida(path string) (bool, error) {
+func IsSida(path string) bool {
 	folders := []string{
 		filepath.Join(path, "layout"),
 		filepath.Join(path, "pages"),
@@ -17,12 +18,8 @@ func IsSida(path string) (bool, error) {
 
 	for _, f := range folders {
 		ff, err := os.Stat(f)
-		if os.IsNotExist(err) {
-			return false, nil
-		}
-
-		if !ff.Mode().IsDir() {
-			return false, nil
+		if os.IsNotExist(err) || !ff.Mode().IsDir() {
+			return false
 		}
 	}
 
@@ -32,8 +29,9 @@ func IsSida(path string) (bool, error) {
 
 	err := v.ReadInConfig()
 	if err != nil {
-		return false, err
+		fmt.Printf("err :%v", err)
+		return false
 	}
 
-	return true, nil
+	return true
 }
