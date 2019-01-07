@@ -30,8 +30,14 @@ func main() {
 	newCmd := newNewCommand(cmd)
 	initCmd := newInitCommand(cmd)
 	generateCmd := newGenerateCommand(cmd)
+	versionCmd := newVersionCommand(cmd)
 
-	cmd.AddCommand(newCmd.Command(), initCmd.Command(), generateCmd.Command())
+	cmd.AddCommand(
+		newCmd.Command(),
+		initCmd.Command(),
+		generateCmd.Command(),
+		versionCmd.Command(),
+	)
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
