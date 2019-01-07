@@ -38,9 +38,6 @@ func newGenerateCommand(rootCmd *cobra.Command) command {
 }
 
 func (g *generateCmd) runGenerate(c *cobra.Command, args []string) error {
-
-	fmt.Printf("build dir: %v\n\n\n", g.buildDir)
-
 	path := g.rootCmd.PersistentFlags().Lookup("path").Value.String()
 
 	p, err := filepath.Abs(filepath.Clean(path))
@@ -48,9 +45,9 @@ func (g *generateCmd) runGenerate(c *cobra.Command, args []string) error {
 		return err
 	}
 
-	_, err = sida.IsSida(p)
-	if err != nil {
-		return err
+	ok := sida.IsSida(p)
+	if !ok {
+		return fmt.Errorf("target directory isn't a Sida")
 	}
 
 	cfg, err := config.FromFile(p, "config")
