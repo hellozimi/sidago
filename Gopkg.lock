@@ -200,11 +200,9 @@
   analyzer-version = 1
   input-imports = [
     "github.com/gomarkdown/markdown",
-    "github.com/gomarkdown/markdown/ast",
     "github.com/gomarkdown/markdown/html",
     "github.com/gomarkdown/markdown/parser",
     "github.com/microcosm-cc/bluemonday",
-    "github.com/mmarkdown/mmark/mast",
     "github.com/mmarkdown/mmark/mparser",
     "github.com/mmarkdown/mmark/render/mhtml",
     "github.com/pelletier/go-toml",
