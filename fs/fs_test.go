@@ -26,6 +26,7 @@ func TestIsDirEmpty(t *testing.T) {
 		{"./", false},
 		{tmpDir, true},
 		{tmpFile.Name(), false},
+		{"/usr/local/var/sida", false},
 	}
 
 	for i, test := range cases {

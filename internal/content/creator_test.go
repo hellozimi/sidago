@@ -32,17 +32,18 @@ func TestContentCreator(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Coudln't create TempDir")
 	}
-	defer os.Remove(tmpDir)
-	tmpPostsDir, err := ioutil.TempDir(tmpDir, "posts")
+	defer os.RemoveAll(tmpDir)
+
+	tmpPostsDir := filepath.Join(tmpDir, "posts")
+	err = os.Mkdir(tmpPostsDir, 0777)
 	if err != nil {
 		t.Fatalf("Coudln't create tmpPostsDir")
 	}
-	defer os.Remove(tmpPostsDir)
-	tmpPagesDir, err := ioutil.TempDir(tmpDir, "pages")
+	tmpPagesDir := filepath.Join(tmpDir, "pages")
+	err = os.Mkdir(tmpPagesDir, 0777)
 	if err != nil {
 		t.Fatalf("Coudln't create tmpPagesDir")
 	}
-	defer os.Remove(tmpPagesDir)
 
 	ymdToday := time.Now().Format("2006-01-02")
 
@@ -54,6 +55,8 @@ func TestContentCreator(t *testing.T) {
 		eod string
 		// output file path
 		eofp string
+		// execute error
+		err error
 	}{
 		{
 			a:    New(tmpDir, "page", "My Page"),
@@ -82,6 +85,7 @@ func TestContentCreator(t *testing.T) {
 			et:   typeUnknown,
 			eod:  tmpDir,
 			eofp: filepath.Join(tmpDir, "something.md"),
+			err:  ErrContentTypeNotSupported,
 		},
 	}
 
@@ -100,6 +104,11 @@ func TestContentCreator(t *testing.T) {
 
 		if x.a.outputFilePath() != x.eofp {
 			t.Errorf("expected outputFilePath to equal '%s' but was '%s'", x.eofp, x.a.outputFilePath())
+		}
+
+		err := x.a.Execute(false)
+		if err != x.err {
+			t.Errorf("expected execute err to equal '%v' but was '%v'", x.err, err)
 		}
 	}
 }
