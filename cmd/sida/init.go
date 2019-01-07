@@ -82,7 +82,7 @@ func (i *initCmd) doRunInit(basepath string, force bool) error {
 		return err
 	}
 
-	fmt.Printf("🚀 Your new sida is now created in %s!\n\n", basepath)
+	fmt.Printf("🚀 Your new sida is now created in %s\n\n", basepath)
 
 	return nil
 }
