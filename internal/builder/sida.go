@@ -6,6 +6,9 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
+
+	"github.com/hellozimi/sidago/internal/sitemap"
 
 	"github.com/hellozimi/sidago/fs"
 	"github.com/hellozimi/sidago/internal/builder/config"
@@ -64,6 +67,17 @@ func (s *Sida) Posts() []*Page {
 	return posts
 }
 
+// VisiblePages returns a list of all pages which
+// filter out drafts
+func (s *Sida) visiblePages() []*Page {
+	allPages := make([]*Page, 0)
+	for _, p := range s.allPages {
+		if !p.Draft {
+			allPages = append(allPages, p)
+		}
+	}
+	return allPages
+}
 
 func (s *Sida) makeSitemap() *sitemap.Sitemap {
 	sm := sitemap.New()
@@ -102,7 +116,20 @@ func (s *Sida) Build() error {
 		filepath.Join(s.basePath, "build/static"),
 	)
 	if err != nil {
-		return fmt.Errorf("error copying static assets: %v", err)
+		return fmt.Errorf("❌ error copying static assets: %v", err)
+	}
+
+	sm, err := s.makeSitemap().Render()
+	if err != nil {
+		return err
+	}
+
+	sitemapFile := filepath.Join(s.basePath, "build", "sitemap.xml")
+	fmt.Printf("🌳 Creating sitemap\n")
+	err = ioutil.WriteFile(sitemapFile, sm, 0777)
+	if err != nil {
+		fmt.Printf("❌ couldn't write sitemap.xml\n ")
+		return err
 	}
 
 	fmt.Printf("\n🚀 Build completed...\n\n")
