@@ -22,7 +22,13 @@ type PageMeta struct {
 
 // URL returns the permalink for a page
 func (p *PageMeta) URL() template.URL {
-	return template.URL(p.page.sida.Global.baseURL + p.page.RelOutputPath())
+	rel := p.page.RelOutputPath()
+
+	// Makes index.html target /
+	if p.page.Kind() == kindIndex {
+		rel = ""
+	}
+	return template.URL(p.page.sida.Global.baseURL + rel)
 }
 
 func newPageMeta(path string) PageMeta {
