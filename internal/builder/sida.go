@@ -138,6 +138,11 @@ func (s *Sida) Build() error {
 }
 
 func (s *Sida) buildInfo() {
+	baseURL := s.config.GetString("base_url")
+
+	if len(baseURL) > 0 && !strings.HasSuffix(baseURL, "/") {
+		baseURL = baseURL + "/"
+	}
 	s.Global = GlobalInfo{
 		Title:       s.config.GetString("title"),
 		Description: s.config.GetString("description"),
