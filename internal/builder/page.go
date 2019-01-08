@@ -70,6 +70,9 @@ func (p *Page) init() {
 
 	filename, _ := helpers.FileAndExt(p.path)
 	slug, date := helpers.SlugAndDateFromFile(filename)
+	if date.IsZero() {
+		date = time.Now()
+	}
 	p.Date = date
 	p.Title = helpers.Unslugify(slug)
 
