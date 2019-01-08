@@ -64,6 +64,16 @@ func (s *Sida) Posts() []*Page {
 	return posts
 }
 
+
+func (s *Sida) makeSitemap() *sitemap.Sitemap {
+	sm := sitemap.New()
+	for _, p := range s.visiblePages() {
+		location := string(p.URL())
+		sm.Add(location, p.Date)
+	}
+	return sm
+}
+
 // Build starts the build procedure and generates
 // all the html files and copies static content to
 // the build directory
