@@ -70,13 +70,40 @@ $ sida generate
 
 Now's your page put into the `./build` directory, ready to be deployed.
 
+## Variables
+
+### Global Variables
+
+|Variable|Description|
+|---|---|
+|`.Global.Title`|The page title provided in config.toml|
+|`.Global.Description`|The page description provided in config.toml|
+|`.Global.Copyright`|The copyright information provided in config.toml|
+|`.Global.BaseURL`|The base url provided in config.toml|
+|`.Global.Posts`|Returns a list with all non draft posts sorted by date|
+
+### Page Variables
+
+|Variable|Description|
+|---|---|
+|`.Title`|The title of the page from either parsed front matter or from markdown file|
+|`.Date`|The date from either parsed front matter or from markdown file (Only usable on posts)|
+|`.Draft`|Boolean to see if the page is a draft or not (specified in front matter - defaults to false)|
+|`.Content`|Returns the parsed html content|
+|`.Summary`|Returns a summary from the content without any html tags|
+|`.Slug`|Returns the page slug|
+|`.PageMeta.URL`|The url to the current page|
+|`.PageMeta.DateComponents.Year`|The year as string parsed from the posts date|
+|`.PageMeta.DateComponents.Month`|The month as string parsed from the posts date|
+|`.PageMeta.DateComponents.Day`|The day as string parsed from the posts date|
+
 ## Todo
 
 - [ ] Support for menus in config.toml
 - [ ] FuncMap to transform asset paths and links to `base_url`-links.
 - [ ] RSS
 - [x] Sitemap.xml
-- [ ] Documentation for template variables
+- [x] Documentation for template variables
 - [ ] Define robots.txt
 - [ ] Describe how to host on [now.sh](https://zeit.co/now)
 - [ ] Nginx config to serve static html files
