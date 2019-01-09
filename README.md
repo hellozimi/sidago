@@ -75,7 +75,7 @@ Now's your page put into the `./build` directory, ready to be deployed.
 - [ ] Support for menus in config.toml
 - [ ] FuncMap to transform asset paths and links to `base_url`-links.
 - [ ] RSS
-- [ ] Sitemap.xml
+- [x] Sitemap.xml
 - [ ] Documentation for template variables
 - [ ] Define robots.txt
 - [ ] Describe how to host on [now.sh](https://zeit.co/now)
