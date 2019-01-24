@@ -143,11 +143,15 @@ func (s *Sida) buildInfo() {
 	if len(baseURL) > 0 && !strings.HasSuffix(baseURL, "/") {
 		baseURL = baseURL + "/"
 	}
+
+	menu := newMenu(s.config.Get("menu"))
+
 	s.Global = GlobalInfo{
 		Title:       s.config.GetString("title"),
 		Description: s.config.GetString("description"),
 		Copyright:   s.config.GetString("copyright"),
 		baseURL:     s.config.GetString("base_url"),
+		Menu:        menu,
 		sida:        s,
 	}
 }

@@ -12,6 +12,7 @@ type GlobalInfo struct {
 	Description string
 	Copyright   string
 	Data        *map[string]interface{}
+	Menu        *Menu
 	baseURL     string
 	sida        *Sida
 }
