@@ -1,4 +1,4 @@
-## Sida
+# Sida
 
 [![Build Status](https://travis-ci.org/hellozimi/sidago.svg?branch=master)](https://travis-ci.org/hellozimi/sidago)
 
@@ -81,6 +81,7 @@ Now's your page put into the `./build` directory, ready to be deployed.
 |`.Global.Copyright`|The copyright information provided in config.toml|
 |`.Global.BaseURL`|The base url provided in config.toml|
 |`.Global.Posts`|Returns a list with all non draft posts sorted by date|
+|`.Global.Menu.Items`|Returns a list with all menu items defined in config.toml|
 
 ### Page Variables
 
@@ -97,9 +98,29 @@ Now's your page put into the `./build` directory, ready to be deployed.
 |`.PageMeta.DateComponents.Month`|The month as string parsed from the posts date|
 |`.PageMeta.DateComponents.Day`|The day as string parsed from the posts date|
 
+
+## config.toml
+
+An example config
+
+```toml
+title = "Sida"
+description = "A blog about sida"
+copyright = "© Copyright 2019 Author"
+base_url = "https://sidago.blog/"
+
+[[menu]]
+title = "About"
+link = "/about.html"
+
+[[menu]]
+title = "Contact"
+link = "/contact.html"
+```
+
 ## Todo
 
-- [ ] Support for menus in config.toml
+- [x] Support for menus in config.toml
 - [ ] FuncMap to transform asset paths and links to `base_url`-links.
 - [ ] RSS
 - [x] Sitemap.xml
