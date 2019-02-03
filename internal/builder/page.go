@@ -47,6 +47,10 @@ func (p *Page) Kind() PageKind {
 	return p.kind
 }
 
+func (p *Page) IsHome() bool {
+	return p.kind == kindIndex
+}
+
 // Content for template rendering
 func (p *Page) Content() template.HTML {
 	return template.HTML(string(p.content))

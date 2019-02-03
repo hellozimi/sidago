@@ -93,6 +93,7 @@ Now's your page put into the `./build` directory, ready to be deployed.
 |`.Content`|Returns the parsed html content|
 |`.Summary`|Returns a summary from the content without any html tags|
 |`.Slug`|Returns the page slug|
+|`.IsHome`|Returns if the current page is the index page|
 |`.PageMeta.URL`|The url to the current page|
 |`.PageMeta.DateComponents.Year`|The year as string parsed from the posts date|
 |`.PageMeta.DateComponents.Month`|The month as string parsed from the posts date|
