@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net/url"
 	"path/filepath"
+	"strings"
 
 	"github.com/hellozimi/sidago/internal/builder"
 	"github.com/hellozimi/sidago/internal/builder/config"
@@ -12,9 +14,10 @@ import (
 )
 
 type generateCmd struct {
-	buildDir string
-	cmd      *cobra.Command
-	rootCmd  *cobra.Command
+	buildDir     string
+	skipsBaseUrl bool
+	cmd          *cobra.Command
+	rootCmd      *cobra.Command
 	command
 }
 
@@ -33,6 +36,7 @@ func newGenerateCommand(rootCmd *cobra.Command) command {
 	c.cmd = cmd
 
 	cmd.Flags().StringVarP(&c.buildDir, "build", "b", "./build", "pass to generate the content in any other path than ./build - relative to project cwd")
+	cmd.Flags().BoolVarP(&c.skipsBaseUrl, "skip-baseurl", "s", false, "skips url transformation to add base url (defaults to false)")
 
 	return c
 }
@@ -55,6 +59,31 @@ func (g *generateCmd) runGenerate(c *cobra.Command, args []string) error {
 		return err
 	}
 
+	baseURL, err := fixBaseURL(cfg.GetString("base_url"), g.skipsBaseUrl)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("skips: %v\n", g.skipsBaseUrl)
+
+	cfg.Set("base_url", baseURL)
+
 	s := builder.NewSida(p, cfg)
 	return s.Build()
+}
+
+func fixBaseURL(s string, skipBaseURL bool) (string, error) {
+	if skipBaseURL {
+		return "/", nil
+	}
+
+	if !strings.HasSuffix(s, "/") {
+		s = s + "/"
+	}
+	u, err := url.Parse(s)
+	if err != nil {
+		return "", err
+	}
+
+	return u.String(), nil
 }
