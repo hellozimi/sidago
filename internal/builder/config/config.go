@@ -16,4 +16,5 @@ type Config interface {
 	GetDuration(key string) time.Duration
 	IsSet(key string) bool
 	AllSettings() map[string]interface{}
+	Set(key string, value interface{})
 }
