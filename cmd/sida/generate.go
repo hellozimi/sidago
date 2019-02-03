@@ -64,8 +64,6 @@ func (g *generateCmd) runGenerate(c *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("skips: %v\n", g.skipsBaseUrl)
-
 	cfg.Set("base_url", baseURL)
 
 	s := builder.NewSida(p, cfg)
